@@ -48,6 +48,7 @@ public class AlertAppleMusic17View: UIView, AlertViewProtocol, AlertViewInternal
         
         if let title = title {
             let label = UILabel()
+            label.adjustsFontForContentSizeCategory = true
             label.font = UIFont.preferredFont(forTextStyle: .body, weight: .semibold, addPoints: -2)
             label.numberOfLines = 0
             let style = NSMutableParagraphStyle()
@@ -61,6 +62,7 @@ public class AlertAppleMusic17View: UIView, AlertViewProtocol, AlertViewInternal
         
         if let subtitle = subtitle {
             let label = UILabel()
+            label.adjustsFontForContentSizeCategory = true
             label.font = UIFont.preferredFont(forTextStyle: .footnote)
             label.numberOfLines = 0
             let style = NSMutableParagraphStyle()
@@ -120,6 +122,11 @@ public class AlertAppleMusic17View: UIView, AlertViewProtocol, AlertViewInternal
             dismissInTime = true
             dismissByTap = true
         }
+
+        if #available(iOS 15.0, *) {
+            titleLabel?.maximumContentSizeCategory = .extraLarge
+            subtitleLabel?.maximumContentSizeCategory = .accessibilityExtraLarge
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -142,7 +149,7 @@ public class AlertAppleMusic17View: UIView, AlertViewProtocol, AlertViewInternal
         #endif
         
         transform = transform.scaledBy(x: self.presentDismissScale, y: self.presentDismissScale)
-        
+
         if dismissByTap {
             let tapGesterRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismiss))
             addGestureRecognizer(tapGesterRecognizer)
@@ -202,7 +209,7 @@ public class AlertAppleMusic17View: UIView, AlertViewProtocol, AlertViewInternal
         
         let maxWidth = {
             if let viewForPresent = self.viewForPresent {
-                return min(viewForPresent.frame.width * 0.8, 270)
+                return viewForPresent.readableContentGuide.layoutFrame.width
             } else {
                 return 270
             }
