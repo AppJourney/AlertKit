@@ -139,7 +139,6 @@ public class AlertAppleMusic17View: UIView, AlertViewProtocol, AlertViewInternal
         viewForPresent?.addSubview(self)
         guard let viewForPresent = viewForPresent else { return }
         
-        alpha = 0
         sizeToFit()
         center.x = viewForPresent.frame.midX
         #if os(visionOS)
@@ -148,7 +147,7 @@ public class AlertAppleMusic17View: UIView, AlertViewProtocol, AlertViewInternal
         frame.origin.y = viewForPresent.frame.height - viewForPresent.safeAreaInsets.bottom - frame.height - 64
         #endif
         
-        transform = transform.scaledBy(x: self.presentDismissScale, y: self.presentDismissScale)
+		transform = transform.translatedBy(x: 0, y: frame.height + viewForPresent.safeAreaInsets.bottom + 64)
 
         if dismissByTap {
             let tapGesterRecognizer = UITapGestureRecognizer(target: self, action: #selector(dismiss))
@@ -159,8 +158,7 @@ public class AlertAppleMusic17View: UIView, AlertViewProtocol, AlertViewInternal
         
         haptic?.impact()
         
-        UIView.animate(withDuration: presentDismissDuration, animations: {
-            self.alpha = 1
+		UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.65, initialSpringVelocity: 0.5, animations: {
             self.transform = CGAffineTransform.identity
         }, completion: { [weak self] finished in
             guard let self = self else { return }
@@ -184,10 +182,10 @@ public class AlertAppleMusic17View: UIView, AlertViewProtocol, AlertViewInternal
         self.dismiss(customCompletion: self.completion)
     }
     
-    func dismiss(customCompletion: (()->Void)? = nil) {
-        UIView.animate(withDuration: presentDismissDuration, animations: {
+    func dismiss(customCompletion: (() -> Void)? = nil) {
+		UIView.animate(withDuration: 0.5, delay: 0, usingSpringWithDamping: 0.65, initialSpringVelocity: 0.5, animations: {
             self.alpha = 0
-            self.transform = self.transform.scaledBy(x: self.presentDismissScale, y: self.presentDismissScale)
+			self.transform = .identity.translatedBy(x: 0, y: self.frame.height + (self.viewForPresent?.safeAreaInsets.bottom ?? 0) + 64)
         }, completion: { [weak self] finished in
             self?.removeFromSuperview()
             customCompletion?()
