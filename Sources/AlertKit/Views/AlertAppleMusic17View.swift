@@ -30,7 +30,7 @@ public class AlertAppleMusic17View: UIView, AlertViewProtocol, AlertViewInternal
     
     fileprivate var completion: (()->Void)? = nil
     
-    private lazy var backgroundView: UIView = {
+    public lazy var backgroundView: UIView = {
         #if os(visionOS)
         let swiftUIView = VisionGlassBackgroundView(cornerRadius: 12)
         let host = UIHostingController(rootView: swiftUIView)
